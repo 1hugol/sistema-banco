@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 
@@ -32,13 +33,15 @@ public class TestConfig implements CommandLineRunner {
 
         titularRepository.save(t1);
 
-        Conta c1 = new ContaCorrente(null, "CC", "0001", 11.55, LocalDate.of(2022, 02,10), t1);
-        Conta c2 = new ContaPoupanca(null, "CP", "0002", 10.0, LocalDate.of(2022, 02,10), t1);
-        Conta c3 = new ContaCorrente(null, "CC", "0003", 0.0, LocalDate.of(2022, 02,10), t1);
+        Conta c1 = new ContaCorrente(null, "CC", "0001", new BigDecimal("11.55"), LocalDate.of(2022, 02,10), t1);
+        Conta c2 = new ContaPoupanca(null, "CP", "0002", new BigDecimal("10"), LocalDate.of(2022, 02,10), t1);
+        Conta c3 = new ContaCorrente(null, "CC", "0003", new BigDecimal("0"), LocalDate.of(2022, 02,10), t1);
 
         contaRepository.saveAll(Arrays.asList(c1, c2, c3));
 
         t1.getContas().addAll(Arrays.asList(c1, c2, c3));
+
+        c1.sacar(new BigDecimal("10"));
 
         titularRepository.save(t1);
     }

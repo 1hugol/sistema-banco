@@ -1,6 +1,6 @@
 package com.minhaempresa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -20,6 +20,7 @@ public class Titular implements Serializable {
     private String nome;
     @Column(nullable = false, unique = true, length = 11)
     private String cpf;
+    @JsonIgnore
     @OneToMany(mappedBy = "titular", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Conta> contas = new LinkedHashSet<>();
 

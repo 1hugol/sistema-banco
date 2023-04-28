@@ -23,3 +23,6 @@ Para este projeto estou usando o Maven com as seguintes dependências e versões
   - Após os mapeamentos e relacionamentos criei o repository e um controller inicial 
   para cada classe com um Endpoint que retorna o que foi cadastrado;
   - Por fim fiz o seed do banco H2;
+## 4ª etapa
+  - Criei os services das classes Conta e Titular transferindo toda regra de negócio do controller para o service;
+  - Criei classes personalizadas para as respostas dos endpoints, facilitando uma posterior implantação de consulta por níveis de autorização;

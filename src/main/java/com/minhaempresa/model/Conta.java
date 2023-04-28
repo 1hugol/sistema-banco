@@ -1,13 +1,12 @@
 package com.minhaempresa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -24,9 +23,11 @@ public abstract class Conta{
     @Column(insertable = false, updatable = false)
     private String tipo;
     private String numeroConta;
-    private Double saldo;
+    private BigDecimal saldo;
     private LocalDate dataCriacao;
-    @JsonIgnore
     @ManyToOne
     private Titular titular;
+
+    public abstract void depositar(BigDecimal valor);
+    public abstract void sacar(BigDecimal valor);
 }
