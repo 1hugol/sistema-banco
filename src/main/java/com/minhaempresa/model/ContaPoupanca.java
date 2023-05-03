@@ -14,8 +14,11 @@ import java.time.LocalDate;
 public class ContaPoupanca extends Conta implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public ContaPoupanca(Long id, String tipo, String numeroConta, BigDecimal saldo, LocalDate dataCriacao, Titular titular) {
-        super(id, tipo, numeroConta, saldo, dataCriacao, titular);
+    public ContaPoupanca(Long id, String tipo, BigDecimal valor, LocalDate dataCriacao, Cliente cliente) {
+        super(id, tipo, dataCriacao, cliente);
+        if (valor.compareTo(new BigDecimal("50")) < 0)
+            throw new IllegalArgumentException("Valor mínimo pra abertura de Conta Poupança é R$ 50");
+        else depositar(valor);
     }
 
     @Override

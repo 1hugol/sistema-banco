@@ -22,12 +22,34 @@ public abstract class Conta{
     private Long id;
     @Column(insertable = false, updatable = false)
     private String tipo;
+    @Column(unique = true)
     private String numeroConta;
-    private BigDecimal saldo;
+    private BigDecimal saldo = BigDecimal.ZERO;
     private LocalDate dataCriacao;
+    private static int ultimaContaGerada = 10000;
     @ManyToOne
-    private Titular titular;
+    private Cliente titular;
+
+    public Conta(Long id, String tipo, LocalDate dataCriacao, Cliente titular) {
+        this.id = id;
+        this.tipo = tipo;
+        this.numeroConta = String.valueOf(++ultimaContaGerada);
+        this.dataCriacao = dataCriacao;
+        this.titular = titular;
+    }
+
+    public Conta(Long id, String tipo, BigDecimal valor, LocalDate dataCriacao, Cliente titular) {
+        this.id = id;
+        this.tipo = tipo;
+        this.numeroConta = String.valueOf(++ultimaContaGerada);
+        this.saldo = valor;
+        this.dataCriacao = dataCriacao;
+        this.titular = titular;
+    }
 
     public abstract void depositar(BigDecimal valor);
     public abstract void sacar(BigDecimal valor);
+
+
+
 }

@@ -16,8 +16,12 @@ import static com.minhaempresa.utils.Constants.TAXA_SAQUE;
 public class ContaCorrente extends Conta implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public ContaCorrente(Long id, String tipo, String numeroConta, BigDecimal saldo, LocalDate dataCriacao, Titular titular) {
-        super(id, tipo, numeroConta, saldo, dataCriacao, titular);
+    public ContaCorrente(Long id, String tipo, LocalDate dataCriacao, Cliente cliente) {
+        super(id, tipo, dataCriacao, cliente);
+    }
+
+    public ContaCorrente(Long id, String tipo, BigDecimal valor, LocalDate dataCriacao, Cliente titular) {
+        super(id, tipo, valor, dataCriacao, titular);
     }
 
     @Override

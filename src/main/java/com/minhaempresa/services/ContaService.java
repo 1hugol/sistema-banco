@@ -1,6 +1,12 @@
 package com.minhaempresa.services;
 
+import com.minhaempresa.controllers.request.PostContaRequest;
+import com.minhaempresa.controllers.response.GetContaComSaldoResponse;
+import com.minhaempresa.controllers.response.GetContaComTitularResponse;
+import com.minhaempresa.model.Cliente;
 import com.minhaempresa.model.Conta;
+import com.minhaempresa.model.ContaCorrente;
+import com.minhaempresa.model.ContaPoupanca;
 import com.minhaempresa.repositories.ContaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -8,25 +14,94 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class ContaService<T> {
-    private final ContaRepository<Conta> contaRepository;
+public class ContaService {
+    private final ContaRepository contaRepository;
 
-    public List<Conta> buscarContas() {
-        return contaRepository.findAll();
+    private final ClienteService clienteService;
+
+    public List<GetContaComTitularResponse> buscarContas() {
+        return retornarListaDeContas();
     }
 
-    public Conta buscarConta(Long id) {
-        Optional<Conta> obj = contaRepository.findById(id);
-        return obj.orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+    public GetContaComSaldoResponse buscarConta(Long id) {
+        GetContaComSaldoResponse contaResponse;
+        Optional<Conta> conta = contaRepository.findById(id);
+        if (conta.isPresent()) {
+            contaResponse = retornarContaComSaldo(conta.get());
+        } else throw new IllegalArgumentException("Conta não encontrada");
+        return contaResponse;
     }
 
-    public Conta sacar(Long id, BigDecimal valor) {
-        Conta conta = buscarConta(id);
-        conta.sacar(valor);
-        return contaRepository.save(conta);
+    public GetContaComTitularResponse criarConta(PostContaRequest postContaRequest) {
+        Conta conta = contaRepository.save(associarContaComTitular(postContaRequest));
+        return retornarContaCriada(conta);
     }
 
+    public GetContaComSaldoResponse depositar(Long id, BigDecimal valor) {
+        Optional<Conta> conta = contaRepository.findById(id);
+        if (conta.isPresent()) {
+            conta.get().depositar(valor);
+        } else throw new IllegalArgumentException("Conta não encontrada");
+
+        return retornarContaComSaldo(contaRepository.save(conta.get()));
+    }
+
+    public GetContaComSaldoResponse sacar(Long id, BigDecimal valor) {
+        Optional<Conta> conta = contaRepository.findById(id);
+        if (conta.isPresent()) {
+            conta.get().sacar(valor);
+        } else throw new IllegalArgumentException("Conta não encontrada");
+
+        return retornarContaComSaldo(contaRepository.save(conta.get()));
+    }
+
+    private Conta associarContaComTitular(PostContaRequest postContaRequest) {
+
+        Cliente titular = clienteService.buscarPorId(postContaRequest.getTitular_id());
+        Conta novaConta = null;
+
+        if (postContaRequest.getTipo().equals("CC")) {
+            if (postContaRequest.getSaldo().equals(BigDecimal.ZERO)) {
+                novaConta =
+                        new ContaCorrente(null
+                                , postContaRequest.getTipo()
+                                , postContaRequest.getDataCriacao()
+                                , titular);
+            } else {
+                novaConta =
+                        new ContaCorrente(null
+                                , postContaRequest.getTipo()
+                                , postContaRequest.getSaldo()
+                                , postContaRequest.getDataCriacao()
+                                , titular);
+            }
+        } else if (postContaRequest.getTipo().equals("CP")) {
+            novaConta = new ContaPoupanca(null
+                    , postContaRequest.getTipo()
+                    , postContaRequest.getSaldo()
+                    , postContaRequest.getDataCriacao()
+                    , titular);
+        }
+        return novaConta;
+    }
+
+    private List<GetContaComTitularResponse> retornarListaDeContas() {
+        List<Conta> listaContas = contaRepository.findAll();
+        return listaContas
+                .stream()
+                .map(c -> new GetContaComTitularResponse(c.getTipo(), c.getNumeroConta(), c.getTitular().getNome()))
+                .collect(Collectors.toList());
+    }
+
+    private GetContaComTitularResponse retornarContaCriada(Conta conta) {
+        return new GetContaComTitularResponse(conta.getTipo(), conta.getNumeroConta(), conta.getTitular().getNome());
+    }
+
+    private GetContaComSaldoResponse retornarContaComSaldo(Conta conta) {
+        return new GetContaComSaldoResponse(conta.getTitular().getNome(), conta.getTipo(), conta.getNumeroConta(), conta.getSaldo());
+    }
 }

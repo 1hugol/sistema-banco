@@ -26,3 +26,8 @@ Para este projeto estou usando o Maven com as seguintes dependências e versões
 ## 4ª etapa
   - Criei os services das classes Conta e Titular transferindo toda regra de negócio do controller para o service;
   - Criei classes personalizadas para as respostas dos endpoints, facilitando uma posterior implantação de consulta por níveis de autorização;
+## 5ª etapa
+  - Implementação de novas classes personalizadas para request e response dos Endpoints;
+  - Implementação do método de criação de contas;
+  - Para melhor abstração foi alterado o nome da classe Titular para Cliente sendo nomeado de titular o relacionamento entre a Conta e o Cliente;
+   

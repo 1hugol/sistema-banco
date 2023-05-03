@@ -9,8 +9,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 @NoArgsConstructor
 @Entity
-@Table(name = "TB_TITULAR_CONTA")
-public class Titular implements Serializable {
+@Table(name = "TB_CLIENTE")
+public class Cliente implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -21,10 +21,10 @@ public class Titular implements Serializable {
     @Column(nullable = false, unique = true, length = 11)
     private String cpf;
     @JsonIgnore
-    @OneToMany(mappedBy = "titular", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "titular", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Conta> contas = new LinkedHashSet<>();
 
-    public Titular(Long id, String nome, String cpf) {
+    public Cliente(Long id, String nome, String cpf) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
