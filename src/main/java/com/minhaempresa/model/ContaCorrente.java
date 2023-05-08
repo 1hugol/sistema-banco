@@ -16,12 +16,12 @@ import static com.minhaempresa.utils.Constants.TAXA_SAQUE;
 public class ContaCorrente extends Conta implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public ContaCorrente(Long id, String tipo, LocalDate dataCriacao, Cliente cliente) {
-        super(id, tipo, dataCriacao, cliente);
+    public ContaCorrente(Long id, LocalDate dataCriacao, Cliente cliente) {
+        super(id, "CC", dataCriacao, cliente);
     }
 
-    public ContaCorrente(Long id, String tipo, BigDecimal valor, LocalDate dataCriacao, Cliente titular) {
-        super(id, tipo, valor, dataCriacao, titular);
+    public ContaCorrente(Long id, BigDecimal valor, LocalDate dataCriacao, Cliente titular) {
+        super(id, "CC", valor, dataCriacao, titular);
     }
 
     @Override
@@ -31,7 +31,9 @@ public class ContaCorrente extends Conta implements Serializable {
 
     @Override
     public void sacar(BigDecimal valor) {
-        setSaldo(getSaldo().subtract(valor));
-        setSaldo(getSaldo().subtract(TAXA_SAQUE));
+        valor = valor.add(TAXA_SAQUE);
+        if (getSaldo().compareTo(valor) >= 0) {
+            setSaldo(getSaldo().subtract(valor));
+        } else throw new IllegalArgumentException("Saldo insuficiente.");
     }
 }

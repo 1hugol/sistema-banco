@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @DiscriminatorColumn(name = "tipo", length = 2, discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("CO")
 @Table(name = "TB_CONTA")
-public abstract class Conta{
+public abstract class Conta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,6 +39,10 @@ public abstract class Conta{
     }
 
     public Conta(Long id, String tipo, BigDecimal valor, LocalDate dataCriacao, Cliente titular) {
+        if (tipo.equals("CP")) {
+            if (valor.compareTo(new BigDecimal("50")) < 0)
+                throw new IllegalArgumentException("Valor mínimo pra abertura de Conta Poupança é R$ 50");
+        }
         this.id = id;
         this.tipo = tipo;
         this.numeroConta = String.valueOf(++ultimaContaGerada);
@@ -48,8 +52,6 @@ public abstract class Conta{
     }
 
     public abstract void depositar(BigDecimal valor);
+
     public abstract void sacar(BigDecimal valor);
-
-
-
 }

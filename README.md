@@ -30,4 +30,7 @@ Para este projeto estou usando o Maven com as seguintes dependências e versões
   - Implementação de novas classes personalizadas para request e response dos Endpoints;
   - Implementação do método de criação de contas;
   - Para melhor abstração foi alterado o nome da classe Titular para Cliente sendo nomeado de titular o relacionamento entre a Conta e o Cliente;
-   
+## 6ª etapa
+  - Implementação de consultas JPQL no repository da classe Cliente e utilização destas consultas no service e controller;
+  - Correção do construtor da classe Conta que incrementava o número da ultimaContaGerada mesmo que a verificação de valor mínimo retornasse erro;
+  - Implementação dos testes unitários das subclasses ContaCorrente e ContaPoupança;

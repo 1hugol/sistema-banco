@@ -32,9 +32,9 @@ public class TestConfig implements CommandLineRunner {
 
         clienteRepository.save(t1);
 
-        Conta c1 = new ContaCorrente(null, "CC", LocalDate.of(2022, 02, 10), t1);
-        Conta c2 = new ContaPoupanca(null, "CP", new BigDecimal("100"), LocalDate.of(2022, 02, 10), t1);
-        Conta c3 = new ContaCorrente(null, "CC", LocalDate.of(2022, 02, 10), t1);
+        Conta c1 = new ContaCorrente(null, LocalDate.of(2022, 02, 10), t1);
+        Conta c2 = new ContaPoupanca(null, new BigDecimal("100"), LocalDate.of(2022, 02, 10), t1);
+        Conta c3 = new ContaCorrente(null, LocalDate.of(2022, 02, 10), t1);
 
         contaRepository.saveAll(Arrays.asList(c1, c2, c3));
 

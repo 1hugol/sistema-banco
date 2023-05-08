@@ -14,11 +14,8 @@ import java.time.LocalDate;
 public class ContaPoupanca extends Conta implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public ContaPoupanca(Long id, String tipo, BigDecimal valor, LocalDate dataCriacao, Cliente cliente) {
-        super(id, tipo, dataCriacao, cliente);
-        if (valor.compareTo(new BigDecimal("50")) < 0)
-            throw new IllegalArgumentException("Valor mínimo pra abertura de Conta Poupança é R$ 50");
-        else depositar(valor);
+    public ContaPoupanca(Long id, BigDecimal valor, LocalDate dataCriacao, Cliente cliente) {
+        super(id, "CP", valor, dataCriacao, cliente);
     }
 
     @Override
@@ -28,6 +25,9 @@ public class ContaPoupanca extends Conta implements Serializable {
 
     @Override
     public void sacar(BigDecimal valor) {
-        setSaldo(getSaldo().subtract(valor));
+        if (getSaldo().compareTo(valor) >= 0)
+            setSaldo(getSaldo().subtract(valor));
+        else
+            throw new IllegalArgumentException("Saldo insuficiente.");
     }
 }

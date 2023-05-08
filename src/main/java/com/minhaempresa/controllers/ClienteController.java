@@ -1,7 +1,6 @@
 package com.minhaempresa.controllers;
 
 import com.minhaempresa.controllers.response.GetClienteComContasResponse;
-import com.minhaempresa.model.Cliente;
 import com.minhaempresa.services.ClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +23,13 @@ public class ClienteController {
         return ResponseEntity.ok().body(clienteService.buscarTitulares());
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Cliente> buscarTitularPorId(@PathVariable Long id) {
-        return ResponseEntity.ok().body(clienteService.buscarPorId(id));
+    @GetMapping("/titularesid/{id}")
+    public ResponseEntity<GetClienteComContasResponse> buscarTitularPorId(@PathVariable Long id) {
+        return ResponseEntity.ok().body(clienteService.buscarContasTitularId(id));
     }
 
-    @GetMapping(value = "/{id}/contas")
-    public ResponseEntity<GetClienteComContasResponse> buscarContasDoTitular(@PathVariable Long id) {
-        return ResponseEntity.ok().body(clienteService.buscarContas(id));
+    @GetMapping("/titularescpf/{cpf}")
+    public ResponseEntity<GetClienteComContasResponse> buscarTitularPorCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok().body(clienteService.buscarContasTitularCpf(cpf));
     }
 }

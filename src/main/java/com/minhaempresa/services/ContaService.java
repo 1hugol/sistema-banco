@@ -11,6 +11,7 @@ import com.minhaempresa.repositories.ContaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class ContaService {
         Optional<Conta> conta = contaRepository.findById(id);
         if (conta.isPresent()) {
             contaResponse = retornarContaComSaldo(conta.get());
-        } else throw new IllegalArgumentException("Conta não encontrada");
+        } else throw new EntityNotFoundException("Conta não encontrada");
         return contaResponse;
     }
 
@@ -45,7 +46,7 @@ public class ContaService {
         Optional<Conta> conta = contaRepository.findById(id);
         if (conta.isPresent()) {
             conta.get().depositar(valor);
-        } else throw new IllegalArgumentException("Conta não encontrada");
+        } else throw new EntityNotFoundException("Conta não encontrada");
 
         return retornarContaComSaldo(contaRepository.save(conta.get()));
     }
@@ -54,7 +55,7 @@ public class ContaService {
         Optional<Conta> conta = contaRepository.findById(id);
         if (conta.isPresent()) {
             conta.get().sacar(valor);
-        } else throw new IllegalArgumentException("Conta não encontrada");
+        } else throw new EntityNotFoundException("Conta não encontrada");
 
         return retornarContaComSaldo(contaRepository.save(conta.get()));
     }
@@ -68,20 +69,17 @@ public class ContaService {
             if (postContaRequest.getSaldo().equals(BigDecimal.ZERO)) {
                 novaConta =
                         new ContaCorrente(null
-                                , postContaRequest.getTipo()
                                 , postContaRequest.getDataCriacao()
                                 , titular);
             } else {
                 novaConta =
                         new ContaCorrente(null
-                                , postContaRequest.getTipo()
                                 , postContaRequest.getSaldo()
                                 , postContaRequest.getDataCriacao()
                                 , titular);
             }
         } else if (postContaRequest.getTipo().equals("CP")) {
             novaConta = new ContaPoupanca(null
-                    , postContaRequest.getTipo()
                     , postContaRequest.getSaldo()
                     , postContaRequest.getDataCriacao()
                     , titular);
